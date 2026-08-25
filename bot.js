@@ -3,6 +3,7 @@ const { pathfinder, Movements } = require('mineflayer-pathfinder');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 10000;
+const mineflayerViewer = require('prismarine-viewer').mineflayer;
 
 const botArgs = {
   host: 'ProgrammersSMP.aternos.me',
@@ -31,11 +32,19 @@ function initBot() {
     console.log('Neural Core Online. AI is now active.');
     const defaultMove = new Movements(bot);
     bot.pathfinder.setMovements(defaultMove);
+    
+    // START 3D FIRST-PERSON EYES EYE-STREAMER
+    try {
+      mineflayerViewer(bot, { port: 3001, firstPerson: true });
+      console.log('3D Visual eye sockets tracking on port 3001.');
+    } catch (e) {
+      console.log('Camera frame error:', e.message);
+    }
   });
 
   bot.on('chat', (username, message) => {
     if (message.toLowerCase().trim() === 'bot') {
-      bot.chat('👁️ [SIGNAL SENT] Syncing matrix with your local PC screen device...');
+      bot.chat('👁️ [MATRIX INTERCEPT] Activating first-person overlay on your PC screen...');
       triggerCameraSignal = true;
       setTimeout(() => { triggerCameraSignal = false; }, 3000);
     }
@@ -47,15 +56,13 @@ function initBot() {
   });
 
   bot.on('end', () => {
-    console.log('Connection lost. Reconnecting in 5 seconds...');
     setTimeout(initBot, 5000);
   });
-
-  bot.on('error', (err) => console.log('System Error:', err.message));
 }
 
 initBot();
 
+// AI brain loop
 setInterval(async () => {
   if (!bot || !bot.entity) return;
   const situation = analyzeEnvironment();
@@ -131,50 +138,131 @@ async function executeCoreAction(action) {
   }
 }
 
+// THE NEW SCREEN LAYOUT: FIRST-PERSON WORLD VIEWER WITH BRAIN IN THE CORNER
 app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
     <html>
     <head>
-      <title>WorkerBot System Matrix</title>
+      <title>WorkerBot First-Person Core</title>
       <style>
-        body { background-color: #030305; color: #00ffcc; font-family: 'Courier New', monospace; padding: 20px; overflow: hidden; }
-        .hud-container { display: flex; justify-content: space-around; align-items: center; height: 85vh; border: 2px solid #005544; background: radial-gradient(circle, #091316 0%, #020305 100%); }
-        .screen-panel { width: 45%; height: 85%; border: 1px dashed #00aa88; background: rgba(0, 15, 12, 0.4); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; }
-        h2 { text-shadow: 0 0 10px #00ffcc; color: #ffffff; text-transform: uppercase; }
-        .brain-oval { width: 300px; height: 190px; border: 2px solid #00ffcc; border-radius: 50%; position: relative; animation: pulse 2.5s infinite ease-in-out; }
-        .node { width: 8px; height: 8px; background: #ffffff; border-radius: 50%; position: absolute; box-shadow: 0 0 10px #ffff00; }
-        .line { position: absolute; background: rgba(0, 255, 204, 0.35); height: 1px; transform-origin: top left; }
-        .data-overlay { position: absolute; bottom: 20px; left: 20px; font-size: 13px; line-height: 1.7; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); box-shadow: 0 0 35px rgba(0,255,204,0.5); } 100% { transform: scale(1); } }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #000; font-family: 'Courier New', monospace; overflow: hidden; }
+        
+        /* FULLSCREEN FIRST PERSON EYES CANVAS */
+        .camera-viewport {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          border: none;
+          z-index: 1;
+        }
+        
+        /* THE SCI-FI OVERLAY HUD LAYER */
+        .hud-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 10;
+          pointer-events: none;
+          border: 4px solid #00ffcc;
+          box-sizing: border-box;
+          box-shadow: inset 0 0 50px rgba(0,255,204,0.3);
+        }
+        
+        .header-title {
+          position: absolute;
+          top: 15px;
+          left: 20px;
+          color: #ffffff;
+          text-shadow: 0 0 10px #00ffcc;
+          margin: 0;
+          font-size: 20px;
+          letter-spacing: 2px;
+        }
+
+        .telemetry-data {
+          position: absolute;
+          bottom: 20px;
+          left: 20px;
+          color: #00ffcc;
+          font-size: 14px;
+          background: rgba(0,5,5,0.7);
+          padding: 15px;
+          border: 1px solid #00aa88;
+          border-radius: 5px;
+        }
+        
+        /* CORNER BRAIN OVAL CONFIGURATION */
+        .brain-corner-panel {
+          position: absolute;
+          bottom: 20px;
+          right: 20px;
+          width: 220px;
+          height: 140px;
+          background: rgba(3, 5, 8, 0.9);
+          border: 2px dashed #00ffcc;
+          border-radius: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 0 20px rgba(0,255,204,0.4);
+        }
+
+        .brain-oval {
+          width: 180px;
+          height: 100px;
+          border: 2px solid #00ffcc;
+          border-radius: 50%;
+          position: relative;
+          animation: pulse 2s infinite ease-in-out;
+        }
+        
+        .node { width: 6px; height: 6px; background: #fff; border-radius: 50%; position: absolute; box-shadow: 0 0 8px #ffff00; }
+        .line { position: absolute; background: rgba(0, 255, 204, 0.4); height: 1px; transform-origin: top left; }
+        
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 0.8; }
+          50% { transform: scale(1.04); opacity: 1; }
+          100% { transform: scale(1); opacity: 0.8; }
+        }
       </style>
     </head>
     <body>
-      <h2>📡 COGNITIVE CYBER-HUD MAIN MATRIX</h2>
-      <div class="hud-container">
-        <div class="screen-panel">
-          <h2>[ Eye Sensor HUD ]</h2>
-          <div style="width: 70%; height: 50%; border: 2px solid #ff0055; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-            <div style="width: 12px; height: 12px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 10px #ff0055;"></div>
-          </div>
-          <div class="data-overlay">
-            <div>CURRENT OBJECTIVE: <span id="obj-ui" style="color:#fff; font-weight:bold;">${currentObjective}</span></div>
-            <div>SECTOR VECTOR: <span id="pos-ui">Tracking...</span></div>
-          </div>
+
+      <!-- EYE SCREEN: RENDERS REAL-TIME MINECRAFT CHUNKS HE LOOKS AT -->
+      <iframe class="camera-viewport" src="http://localhost:3001"></iframe>
+
+      <!-- INTERFACE LAYER -->
+      <div class="hud-overlay">
+        <h2 class="header-title">👁️ LIVE CORE MATRIX OVERLAY // WORKERBOT FIRST-PERSON EYE CHANNELS</h2>
+        
+        <!-- TEXT STATS LEFT CORNER -->
+        <div class="telemetry-data">
+          <div style="font-weight: bold; color: #fff; margin-bottom: 5px;">[ SATELLITE TELEMETRY ]</div>
+          <div>OBJECTIVE: <span id="obj-ui" style="color: #ffff00;">${currentObjective}</span></div>
+          <div>COORDINATES: <span id="pos-ui">Syncing...</span></div>
+          <div>DIAMONDS: <span id="dm-ui" style="color: #fff;">${totalDiamondsMined}</span></div>
+          <div>KILLS: <span id="pk-ui" style="color: #ff0055;">${totalPlayersKilled}</span></div>
         </div>
-        <div class="screen-panel">
-          <h2>[ Synaptic Matrix Array ]</h2>
+
+        <!-- BRAIN SCENE IN RIGHT CORNER -->
+        <div class="brain-corner-panel">
           <div class="brain-oval">
-            <div class="node" style="top: 25%; left: 25%;"></div>
-            <div class="node" style="top: 55%; left: 15%;"></div>
-            <div class="line" style="top: 27%; left: 27%; width: 95px; transform: rotate(45deg);"></div>
+            <div class="node" style="top: 25%; left: 30%;"></div>
+            <div class="node" style="top: 60%; left: 20%;"></div>
+            <div class="node" style="top: 45%; left: 60%;"></div>
+            <div class="node" style="top: 65%; left: 75%;"></div>
+            <div class="line" style="top: 27%; left: 32%; width: 50px; transform: rotate(40deg);"></div>
+            <div class="line" style="top: 47%; left: 62%; width: 35px; transform: rotate(30deg);"></div>
           </div>
-          <div class="data-overlay">
-            <div>DIAMONDS ACQUIRED: <span id="dm-ui" style="color:#00ffcc;">${totalDiamondsMined}</span></div>
-            <div>PLAYER COMBAT KILLS: <span id="pk-ui" style="color:#ff0055;">${totalPlayersKilled}</span></div>
-          </div>
+          <div style="position: absolute; top: -22px; right: 10px; color: #00ffcc; font-size: 11px; background: #000; padding: 2px 5px;">BRAIN_MATRIX</div>
         </div>
       </div>
+
       <script>
         setInterval(async () => {
           try {
