@@ -2,10 +2,10 @@ const mineflayer = require('mineflayer');
 const { pathfinder } = require('mineflayer-pathfinder');
 
 const bot = mineflayer.createBot({
-  host: process.env.ProgrammersSMP.aternos.me,
-  port: parseInt(process.env.MC_VERSION) || 12589,
-  username: process.env.BOT_NAME || 'WorkerBot',
-  version: false // ЦЕ КЛЮЧОВИЙ РЯДОК: вимикає сувору перевірку версії в Mineflayer
+  host: 'ProgrammersSMP.aternos.me', // Пряма текстова адреса в лапках
+  port: 12589,                       // Твій точний порт з Атерносу
+  username: 'WorkerBot',             // Нікнейм бота
+  version: false                     // Вимикає сувору перевірку версії
 });
 
 
