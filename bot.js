@@ -2,11 +2,12 @@ const mineflayer = require('mineflayer');
 const { pathfinder } = require('mineflayer-pathfinder');
 
 const bot = mineflayer.createBot({
-  host: 'ProgrammersSMP.aternos.me', // Пряма текстова адреса в лапках
-  port: 12589,                       // Твій точний порт з Атерносу
-  username: 'WorkerBot',             // Нікнейм бота
-  version: false                     // Вимикає сувору перевірку версії
+  host: 'ProgrammersSMP.aternos.me',
+  port: 12589,
+  username: 'WorkerBot',
+  version: '1.21.1' // ЗАМІСТЬ false, вкажи конкретну стабільну версію
 });
+
 
 
 bot.loadPlugin(pathfinder);
