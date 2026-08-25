@@ -2,7 +2,7 @@ const mineflayer = require('mineflayer');
 const { pathfinder, Movements } = require('mineflayer-pathfinder');
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 10000; // Render требует порт 10000 по умолчанию для веб-служб
+const PORT = process.env.PORT || 10000;
 
 const botArgs = {
   host: 'ProgrammersSMP.aternos.me',
@@ -28,25 +28,24 @@ function initBot() {
   bot.loadPlugin(pathfinder);
 
   bot.on('spawn', () => {
-    console.log('Neural Core Online. AI is now active and autonomous.');
+    console.log('Neural Core Online. AI is now active.');
     const defaultMove = new Movements(bot);
     bot.pathfinder.setMovements(defaultMove);
   });
 
   bot.on('chat', (username, message) => {
     if (message.toLowerCase().trim() === 'bot') {
-      bot.chat(`👁️ [SIGNAL SENT] Syncing matrix with your local PC screen device...`);
+      bot.chat('👁️ [SIGNAL SENT] Syncing matrix with your local PC screen device...');
       triggerCameraSignal = true;
       setTimeout(() => { triggerCameraSignal = false; }, 3000);
     }
   });
 
   bot.on('death', () => {
-    bot.chat(`❌ [KARMA DROP] WorkerBot died. Punishment: No cake from user Tymofiiplay.`);
+    bot.chat('❌ [KARMA DROP] WorkerBot died. Punishment: No cake from user Tymofiiplay.');
     setTimeout(() => bot.respawn(), 2000);
   });
 
-  // ЕСЛИ БОТА КИКНУЛО, ОН МГНОВЕННО ЗАЙДЕТ ОБРАТНО ТАК ЧТО ОН БУДЕТ 24/7
   bot.on('end', () => {
     console.log('Connection lost. Reconnecting in 5 seconds...');
     setTimeout(initBot, 5000);
@@ -55,10 +54,8 @@ function initBot() {
   bot.on('error', (err) => console.log('System Error:', err.message));
 }
 
-// Запускаем бота
 initBot();
 
-// Искусственный интеллект (Decision Loop)
 setInterval(async () => {
   if (!bot || !bot.entity) return;
   const situation = analyzeEnvironment();
@@ -134,7 +131,6 @@ async function executeCoreAction(action) {
   }
 }
 
-// ВЕБ-ИНТЕРФЕЙС ЭКРАНА
 app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -162,7 +158,7 @@ app.get('/', (req, res) => {
             <div style="width: 12px; height: 12px; background: #ff0055; border-radius: 50%; box-shadow: 0 0 10px #ff0055;"></div>
           </div>
           <div class="data-overlay">
-            <div>CURRENT OJBECTIVE: <span id="obj-ui" style="color:#fff; font-weight:bold;">\${currentObjective}</span></div>
+            <div>CURRENT OBJECTIVE: <span id="obj-ui" style="color:#fff; font-weight:bold;">${currentObjective}</span></div>
             <div>SECTOR VECTOR: <span id="pos-ui">Tracking...</span></div>
           </div>
         </div>
@@ -174,8 +170,8 @@ app.get('/', (req, res) => {
             <div class="line" style="top: 27%; left: 27%; width: 95px; transform: rotate(45deg);"></div>
           </div>
           <div class="data-overlay">
-            <div>DIAMONDS ACQUIRED: <span id="dm-ui" style="color:#00ffcc;">\${totalDiamondsMined}</span></div>
-            <div>PLAYER COMBAT KILLS: <span id="pk-ui" style="color:#ff0055;">\${totalPlayersKilled}</span></div>
+            <div>DIAMONDS ACQUIRED: <span id="dm-ui" style="color:#00ffcc;">${totalDiamondsMined}</span></div>
+            <div>PLAYER COMBAT KILLS: <span id="pk-ui" style="color:#ff0055;">${totalPlayersKilled}</span></div>
           </div>
         </div>
       </div>
@@ -200,11 +196,11 @@ app.get('/cloud-link', (req, res) => {
   const pos = (bot && bot.entity) ? bot.entity.position : { x: 0, y: 0, z: 0 };
   res.json({
     objective: currentObjective,
-    position: `X: \${pos.x.toFixed(1)} Y: \${pos.y.toFixed(1)} Z: \${pos.z.toFixed(1)}`,
+    position: 'X: ' + pos.x.toFixed(1) + ' Y: ' + pos.y.toFixed(1) + ' Z: ' + pos.z.toFixed(1),
     diamonds: totalDiamondsMined,
     kills: totalPlayersKilled,
     openWindowTrigger: triggerCameraSignal
   });
 });
 
-app.listen(PORT, '0.0.0.0', () => console.log(`Web server listening on port \${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log('Web server listening on port ' + PORT));
