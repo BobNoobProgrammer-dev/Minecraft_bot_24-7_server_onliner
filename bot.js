@@ -2,11 +2,12 @@ const mineflayer = require('mineflayer');
 const { pathfinder } = require('mineflayer-pathfinder');
 
 const bot = mineflayer.createBot({
-  host: process.env.SERVER_IP || 'ProgrammersSMP.aternos.me',
-  port: parseInt(process.env.SERVER_PORT) || 12589,
+  host: process.env.SERVER_IP,
+  port: parseInt(process.env.MC_VERSION) || 25565,
   username: process.env.BOT_NAME || 'WorkerBot',
-  version: process.env.MC_VERSION || '1.21.4'
+  version: false // ЦЕ КЛЮЧОВИЙ РЯДОК: вимикає сувору перевірку версії в Mineflayer
 });
+
 
 bot.loadPlugin(pathfinder);
 
