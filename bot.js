@@ -1,8 +1,7 @@
 const mineflayer = require('mineflayer');
 const { pathfinder, Movements } = require('mineflayer-pathfinder');
 const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000;
+const app = express();const PORT = process.env.PORT || 10000;
 
 const bot = mineflayer.createBot({
   host: 'ProgrammersSMP.aternos.me',
