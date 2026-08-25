@@ -6,7 +6,12 @@ const bot = mineflayer.createBot({
   host: 'ProgrammersSMP.aternos.me',
   port: 12589,
   username: 'WorkerBot',
-  version: '1.21.1' // Базова версія для завантаження бібліотек даних
+  version: '1.21.1',
+  // THIS EXPLICITLY BLOCKS THE VERSION CHECK PLUGINS BEFORE CONNECTING
+  clientPlugins: {
+    versionChecking: false,
+    autoVersion: false
+  }
 });
 
 // ХАК: Видаляємо внутрішній плагін перевірки версії, щоб обійти помилку "Please use 26.2"
