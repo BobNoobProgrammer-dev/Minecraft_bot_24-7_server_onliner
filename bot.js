@@ -3,7 +3,6 @@ const { pathfinder, Movements } = require('mineflayer-pathfinder');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 10000;
-const mineflayerViewer = require('prismarine-viewer').mineflayer;
 
 const botArgs = {
   host: 'ProgrammersSMP.aternos.me',
@@ -32,19 +31,11 @@ function initBot() {
     console.log('Neural Core Online. AI is now active.');
     const defaultMove = new Movements(bot);
     bot.pathfinder.setMovements(defaultMove);
-    
-    // Запуск 3D-камеры глаз бота на внутреннем порту 3001
-    try {
-      mineflayerViewer(bot, { port: 3001, firstPerson: true });
-      console.log('3D Visual eye sockets tracking on port 3001.');
-    } catch (e) {
-      console.log('Camera frame error:', e.message);
-    }
   });
 
   bot.on('chat', (username, message) => {
     if (message.toLowerCase().trim() === 'bot') {
-      bot.chat('👁️ [MATRIX INTERCEPT] Establishing visual eye link to your panel...');
+      bot.chat('👁️ [MATRIX INTERCEPT] Syncing satellite radar matrix...');
       triggerCameraSignal = true;
       setTimeout(() => { triggerCameraSignal = false; }, 3000);
     }
@@ -62,7 +53,6 @@ function initBot() {
 
 initBot();
 
-// Главный цикл ИИ
 setInterval(async () => {
   if (!bot || !bot.entity) return;
   const situation = analyzeEnvironment();
@@ -138,7 +128,6 @@ async function executeCoreAction(action) {
   }
 }
 
-// НОВЫЙ ИНТЕРФЕЙС: КАМЕРА ВНУТРИ КРУГА, МОЗГ В НИЖНЕМ ЛЕВОМ УГЛУ
 app.get('/', (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -149,9 +138,8 @@ app.get('/', (req, res) => {
         body { background-color: #030305; color: #00ffcc; font-family: 'Courier New', monospace; padding: 20px; overflow: hidden; }
         .hud-container { display: flex; justify-content: space-around; align-items: center; height: 85vh; border: 2px solid #005544; background: radial-gradient(circle, #091316 0%, #020305 100%); position: relative; }
         .screen-panel { width: 45%; height: 85%; border: 1px dashed #00aa88; background: rgba(0, 15, 12, 0.4); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 8px; }
-        h2 { text-shadow: 0 0 10px #00ffcc; color: #ffffff; text-transform: uppercase; }
+        h2 { text-transform: uppercase; text-shadow: 0 0 10px #00ffcc; color: #ffffff; }
         
-        /* КРУГЛЫЙ ИНТЕРФЕЙС ДЛЯ КАМЕРЫ (ГЛАЗ БОТА) */
         .eye-camera-frame {
           width: 75%;
           height: 55%;
@@ -160,15 +148,18 @@ app.get('/', (req, res) => {
           overflow: hidden;
           position: relative;
           box-shadow: 0 0 25px rgba(255, 0, 85, 0.4);
-          background: #000;
+          background: #05080c;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
-        .camera-stream {
+
+        /* КИБЕР-РАДАР ТЕПЕРЬ СТРОИТСЯ НА CANVAS */
+        #radar-canvas {
           width: 100%;
           height: 100%;
-          border: none;
         }
         
-        /* МОЗГ БОТА ПЕРЕЕХАЛ В НИЖНИЙ ЛЕВЫЙ УГОЛ */
         .brain-shifted-panel {
           position: absolute;
           bottom: 20px;
@@ -185,19 +176,11 @@ app.get('/', (req, res) => {
           animation: pulse 2.5s infinite ease-in-out;
         }
 
-        .right-radar-oval {
-          width: 300px;
-          height: 190px;
-          border: 2px solid #00ffcc;
-          border-radius: 50%;
-          position: relative;
-        }
-        
+        .right-radar-oval { width: 300px; height: 190px; border: 2px solid #00ffcc; border-radius: 50%; position: relative; }
         .node { width: 6px; height: 6px; background: #ffffff; border-radius: 50%; position: absolute; box-shadow: 0 0 8px #ffff00; }
         .line { position: absolute; background: rgba(0, 255, 204, 0.35); height: 1px; transform-origin: top left; }
-        .data-overlay { position: absolute; bottom: 20px; left: 20px; font-size: 13px; line-height: 1.7; }
+        .data-overlay { position: absolute; bottom: 20px; left: 20px; font-size: 13px; line-height: 1.7; width: 85%; }
         .right-overlay { position: absolute; bottom: 20px; left: 20px; font-size: 13px; line-height: 1.7; }
-        
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 25px rgba(0,255,204,0.5); } 100% { transform: scale(1); } }
       </style>
     </head>
@@ -205,22 +188,19 @@ app.get('/', (req, res) => {
       <h2>📡 COGNITIVE CYBER-HUD MAIN MATRIX // LINK ONLINE</h2>
       <div class="hud-container">
         
-        <!-- ЛЕВАЯ ПАНЕЛЬ: ТЕПЕРЬ С РЕАЛЬНОЙ 3D КАМЕРОЙ ГЛАЗ БОТА ВНУТРИ КРУГА -->
         <div class="screen-panel">
           <h2>[ Eye Sensor HUD ]</h2>
           <div class="eye-camera-frame">
-            <!-- Сюда транслируются живые чанки, которые видит бот перед собой -->
-            <iframe class="camera-stream" src="http://localhost:3001"></iframe>
+            <!-- Живой цифровой сонар окружения бота вместо битого localhost -->
+            <canvas id="radar-canvas"></canvas>
           </div>
           
-          <!-- Данные под камерой -->
-          <div class="data-overlay" style="margin-top: 130px; position: static; width: 85%;">
-            <div style="height: 40px;"></div> <!-- Отступ под мозг -->
+          <div class="data-overlay" style="margin-top: 130px; position: static;">
+            <div style="height: 40px;"></div>
             <div>CURRENT OBJECTIVE: <span id="obj-ui" style="color:#fff; font-weight:bold;">${currentObjective}</span></div>
             <div>SECTOR VECTOR: <span id="pos-ui">Tracking coordinates...</span></div>
           </div>
 
-          <!-- МОЗГ СЮДА! Твой красный квадрат "Brain Here!" -->
           <div class="brain-shifted-panel">
             <div style="position: relative; width: 100%; height: 100%;">
               <div class="node" style="top: 25%; left: 30%;"></div>
@@ -234,7 +214,6 @@ app.get('/', (req, res) => {
           </div>
         </div>
 
-        <!-- ПРАВАЯ ПАНЕЛЬ: ЧИСТЫЙ ТРЕКЕР СИНАПТИЧЕСКОЙ МАТРИЦЫ -->
         <div class="screen-panel">
           <h2>[ Synaptic Matrix Array ]</h2>
           <div class="right-radar-oval">
@@ -251,31 +230,58 @@ app.get('/', (req, res) => {
       </div>
 
       <script>
-        setInterval(async () => {
-          try {
-            const res = await fetch('/cloud-link');
-            const data = await res.json();
-      // Keep checking the telemetry updates every 1 second
-      script
-        setInterval(async () => {
-          try {
-            const res = await fetch('/cloud-link');
-            const data = await res.json();
-            document.getElementById('obj-ui').innerText = data.objective;
-            document.getElementById('pos-ui').innerText = data.position;
-            document.getElementById('dm-ui').innerText = data.diamonds;
-            document.getElementById('pk-ui').innerText = data.kills;
-          } catch (e) {
-            // Standby if transmission lapses
+        const canvas = document.getElementById('radar-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        function drawRadar(blocksAround, targetsAround) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const cx = canvas.width / 2;
+          const cy = canvas.height / 2;
+          
+          // Эффект сетки сонара
+          ctx.strokeStyle = 'rgba(255, 0, 85, 0.2)';
+          ctx.beginPath(); ctx.arc(cx, cy, 40, 0, Math.PI*2); ctx.stroke();
+          ctx.beginPath(); ctx.arc(cx, cy, 70, 0, Math.PI*2); ctx.stroke();
+          
+          // Точка самого бота по центру
+          ctx.fillStyle = '#ff0055';
+          ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI*2); ctx.fill();
+          
+          // Симуляция сканирования секторов
+          if (blocksAround) {
+            ctx.fillStyle = 'rgba(0, 255, 204, 0.6)';
+            ctx.fillRect(cx + 25, cy - 30, 8, 8); // Алмазный вектор
           }
-        }, 1000);
-      script
-    </body>
-    </html>
+        if (targetsAround) {
+          ctx.fillStyle = '#ffff00';
+          ctx.beginPath();
+          ctx.arc(cx - 35, cy + 20, 4, 0, Math.PI * 2);
+          ctx.fill(); // Player vector marker
+        }
+      }
+
+      setInterval(async () => {
+        try {
+          const res = await fetch('/cloud-link');
+          const data = await res.json();
+          document.getElementById('obj-ui').innerText = data.objective;
+          document.getElementById('pos-ui').innerText = data.position;
+          document.getElementById('dm-ui').innerText = data.diamonds;
+          document.getElementById('pk-ui').innerText = data.kills;
+          
+          // Re-render sonar mapping based on objectives
+          drawRadar(data.diamonds > 0, data.kills >= 0);
+        } catch (e) {
+          // Fallback during communication delays
+        }
+      }, 1000);
+    </script>
+  </body>
+  </html>
   `);
 });
 
-// JSON API API endpoint layout for the local computer to query tracking updates
+// Broadcast endpoint for local terminal handshakes
 app.get('/cloud-link', (req, res) => {
   const pos = (bot && bot.entity) ? bot.entity.position : { x: 0, y: 0, z: 0 };
   res.json({
@@ -287,7 +293,7 @@ app.get('/cloud-link', (req, res) => {
   });
 });
 
-// Start the Express network server listener channel
+// Open main port binding for Render traffic
 app.listen(PORT, '0.0.0.0', () => {
   console.log('Web server listening on port ' + PORT);
 });
