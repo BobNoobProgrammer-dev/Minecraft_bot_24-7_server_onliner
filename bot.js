@@ -2,8 +2,8 @@ const mineflayer = require('mineflayer');
 const { pathfinder } = require('mineflayer-pathfinder');
 
 const bot = mineflayer.createBot({
-  host: process.env.SERVER_IP || 'YOUR_IP_HERE.aternos.me',
-  port: parseInt(process.env.SERVER_PORT) || 25565,
+  host: process.env.SERVER_IP || 'ProgrammersSMP.aternos.me',
+  port: parseInt(process.env.SERVER_PORT) || 12589,
   username: process.env.BOT_NAME || 'WorkerBot',
   version: process.env.MC_VERSION || '1.20.5'
 });
