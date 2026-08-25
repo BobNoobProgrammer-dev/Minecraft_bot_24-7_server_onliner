@@ -1,0 +1,13 @@
+{
+  "name": "minecraft-mineflayer-bot",
+  "version": "1.0.0",
+  "description": "Minecraft automated bot for Aternos server",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "mineflayer": "^4.20.0",
+    "mineflayer-pathfinder": "^2.4.0"
+  }
+}
