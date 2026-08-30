@@ -1,14 +1,12 @@
 {
-  "name": "minecraft-bot",
+  "name": "donutsmp-afk-bot",
   "version": "1.0.0",
-  "description": "26.2 Custom AI Drone Core Matrix Tracker",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
   },
   "dependencies": {
-    "mineflayer": "^4.20.0",
-    "mineflayer-pathfinder": "^2.4.0",
-    "express": "^4.19.0"
+    "express": "^4.19.2",
+    "mineflayer": "^4.22.0"
   }
 }
