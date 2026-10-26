@@ -1,6 +1,19 @@
 const mineflayer = require('mineflayer');
+const express = require('express');
 
-// Configuration details for connecting to your server
+// --- 1. SET UP EXPRESS WEB SERVER FOR RENDER ---
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Bot is online and running!');
+});
+
+app.listen(PORT, () => {
+    console.log(`Web server listening on port ${PORT} to keep Render service alive.`);
+});
+
+// --- 2. MINEFLAYER BOT INITIALIZATION ---
 const bot = mineflayer.createBot({
     host: 'localhost',       // Change to server IP if needed
     port: 25565,             // Change to your server port
@@ -14,8 +27,7 @@ bot.once('spawn', () => {
     console.log(`${bot.username} has successfully spawned in the world!`);
     bot.chat("Hello! I am an exploration bot. Running loop at 50ms interval.");
 
-    // Start our core 50ms behavior loop (1000ms / 20 = 50ms)
-    // Minecraft internally ticks every 50ms, making this perfectly synced.
+    // Core 50ms behavior loop (1000ms / 20 = 50ms)
     explorationInterval = setInterval(exploreLoop, 50);
 });
 
@@ -33,17 +45,13 @@ const movementControls = ['forward', 'back', 'left', 'right', 'jump'];
 function exploreLoop() {
     if (!bot.entity) return; // Guard clause if bot data isn't loaded yet
 
-    // --- 1. MOVE AROUND (Exploration Physics) ---
-    changeMovementCooldown -= 50; // decrement by 50ms each cycle
+    // --- MOVE AROUND (Exploration Physics) ---
+    changeMovementCooldown -= 50; 
     
     if (changeMovementCooldown <= 0) {
-        // Reset cooldown to a random window between 1.5 to 4 seconds
         changeMovementCooldown = Math.floor(Math.random() * 2500) + 1500;
-
-        // Clear existing movements
         movementControls.forEach(control => bot.setControlState(control, false));
 
-        // Randomly pick a new directional choice
         const randomChoice = Math.random();
         if (randomChoice < 0.6) {
             bot.setControlState('forward', true);
@@ -56,23 +64,20 @@ function exploreLoop() {
             console.log("[Movement] Strafing right...");
         }
 
-        // 25% chance to jump over an obstacle while moving
         if (Math.random() < 0.25) {
             bot.setControlState('jump', true);
-            // Instantly clear jump state next tick so it doesn't hold it down forever
             setTimeout(() => bot.setControlState('jump', false), 50);
         }
     }
 
-    // --- 2. SEE THINGS (Look around & analyze environment) ---
-    // Find the closest loaded entity (Player, Mob, or Item Drop) excluding itself
+    // --- SEE THINGS (Look around & analyze environment) ---
     const targetEntity = bot.nearestEntity((entity) => entity.type !== 'object' && entity.username !== bot.username);
     
     if (targetEntity) {
-        // Lock eyes onto the tracking entity's head coordinates
         bot.lookAt(targetEntity.position.offset(0, targetEntity.height, 0));
         
-        // --- 3. DO SOMETHING (Interaction) ---
-        // If it wanders very close to a mob or player, acknowledge them in logs
+        // --- DO SOMETHING (Interaction) ---
         const distance = bot.entity.position.distanceTo(targetEntity.position);
-        if (distance  console.error('Mineflayer Error:', err));
+        if (distance  {
+    console.error('Mineflayer Error:', err);
+});
