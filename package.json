@@ -6,6 +6,7 @@
     "start": "node bot.js"
   },
   "dependencies": {
+    "express": "^4.19.2",
     "mineflayer": "^4.22.0"
   }
 }
