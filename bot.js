@@ -2,10 +2,10 @@ const mineflayer = require('mineflayer');
 
 // Configuration details for connecting to your server
 const bot = mineflayer.createBot({
-    host: 'ProgrammersSMP.aternos.me',       // Change to server IP if needed
+    host: 'localhost',       // Change to server IP if needed
     port: 25565,             // Change to your server port
     username: 'ExplorerBot',
-    version: '26.3'        // Set to your server's Minecraft version
+    version: '1.20.1'        // Set to your server's Minecraft version
 });
 
 let explorationInterval = null;
