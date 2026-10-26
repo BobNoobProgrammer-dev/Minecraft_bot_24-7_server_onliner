@@ -15,8 +15,8 @@ app.listen(PORT, () => {
 
 // --- 2. MINEFLAYER BOT INITIALIZATION ---
 const bot = mineflayer.createBot({
-    host: 'localhost',       // Change to server IP if needed
-    port: 25565,             // Change to your server port
+    host: 'localhost',       // Change to your target Minecraft server IP
+    port: 25565,             // Change to your target Minecraft server port
     username: 'ExplorerBot',
     version: '1.20.1'        // Set to your server's Minecraft version
 });
